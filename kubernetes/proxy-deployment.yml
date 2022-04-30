@@ -1,0 +1,43 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openresty-deployment
+  labels:
+    app: openresty-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: openresty-deployment
+  template:
+    metadata:
+      labels:
+        app: openresty-deployment
+    spec:
+      containers:
+        - name: openresty-proxy
+          image: openresty-custom
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          env:
+            - name: APP_NAME
+              value: flask-app
+            - name: DNS_URL
+              value: 192.168.0.108 # This is just a hardcoded Consul URL as i havent put it on k8s yet
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: openresty-lb
+  labels:
+    app: openresty
+spec:
+  selector:
+    app: openresty-deployment
+  ports:
+    - port: 80
+      targetPort: 80
+  type: LoadBalancer
