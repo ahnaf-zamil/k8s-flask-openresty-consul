@@ -12,7 +12,7 @@ end
 local dns, _ = dns_res:new { nameservers = { dns_conf }, timeout = 200 }
 
 if not dns then
-    return abort("DNS couldnt be resolved", 500)
+    return abort("Registry couldnt be resolved", 500)
 end
 
 local entries, _ = dns:query(query_domain, { qtype = dns.TYPE_SRV })
@@ -20,13 +20,13 @@ local entries, _ = dns:query(query_domain, { qtype = dns.TYPE_SRV })
 ngx.log(ngx.STDERR, dns_conf[1]);
 
 if not entries then
-    return abort("No records found", 502)
+    return abort("Bad Gateway", 502)
 end
 
-if entries[1].port then
+if entries[1] then
     local t_ip = dns:query(entries[1].target)[1].address
 
     ngx.var.proxy_address = t_ip .. ":" .. entries[1].port
 else
-    return abort("No valid ports found", 500)
+    return abort("Bad Gateway", 502)
 end
