@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: flask-application
-          image: flask-app-k8s
+          image: flask-app-k8s:test
           imagePullPolicy: Never
           ports:
             - containerPort: 5000
@@ -26,5 +26,3 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: status.podIP
-            - name: CONSUL_IP
-              value: 192.168.0.108 # This is just a hardcoded Consul URL as i havent put it on k8s yet

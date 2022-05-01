@@ -1,7 +1,7 @@
 local dns_res = require "resty.dns.resolver"
 
 local query_domain = os.getenv("APP_NAME") .. ".service.dc1.consul"
-local dns_conf = { os.getenv("DNS_URL"), 8600 }
+local dns_conf = { os.getenv("CONSUL_SERVICE_HOST"), 8600 }
 
 
 local function abort(reason, status_code)
